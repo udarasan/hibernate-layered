@@ -1,4 +1,4 @@
-package lk.ijse.pos.dao;
+package com.example.hibernatelayered.dao;
 
 public interface SuperDAO {
 }

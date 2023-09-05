@@ -1,67 +1,73 @@
-package lk.ijse.pos.dao.custom.impl;
+package com.example.hibernatelayered.dao.custom.impl;
 
 
-import lk.ijse.pos.dao.SQLUtil;
-import lk.ijse.pos.dao.custom.CustomerDAO;
-import lk.ijse.pos.entity.Customer;
+import com.example.hibernatelayered.config.FactoryConfiguration;
+import com.example.hibernatelayered.dao.custom.CustomerDAO;
+import com.example.hibernatelayered.entity.Customer;
+import org.hibernate.Session;
+import org.hibernate.Transaction;
 
-import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.ArrayList;
+import java.util.List;
 
 public class CustomerDAOImpl implements CustomerDAO {
 
+
     @Override
-    public ArrayList<Customer> getAll() throws SQLException, ClassNotFoundException {
-        ArrayList<Customer> allCustomers = new ArrayList<>();
-        ResultSet rst = SQLUtil.execute("SELECT * FROM Customer");
-        while (rst.next()) {
-            Customer customer = new Customer(rst.getString("id"), rst.getString("name"), rst.getString("address"));
-            allCustomers.add(customer);
-        }
-        return allCustomers;
+    public List<Customer> getAll()  throws Exception  {
+        Session session = FactoryConfiguration.getInstance().getSession();
+        Transaction transaction = session.beginTransaction();
+        List<Customer> list = session.createNativeQuery("SELECT * FROM Customer", Customer.class).list();
+        transaction.commit();
+        session.close();
+        return list;
+    }
+    //delete dbconnection
+    //delete SQLutil
+    //clear method body in DAOIMPL
+    //add xml configuration file
+    //write DOAImpl method body
+        //open session
+        //open transaction
+        //save()/update();
+        //commit
+        //close the session
+    @Override
+    public boolean exist(String id) throws Exception  {
+        return false;
     }
 
     @Override
-    public boolean add(Customer entity) throws SQLException, ClassNotFoundException {
-        return SQLUtil.execute("INSERT INTO Customer (id,name, address) VALUES (?,?,?)", entity.getId(), entity.getName(), entity.getAddress());
+    public boolean delete(String id)  throws Exception {
+        Session session = FactoryConfiguration.getInstance().getSession();
+
+        Transaction transaction = session.beginTransaction();
+
+        session.createNativeQuery("delete from Customer where id='"+id+"'",Customer.class).executeUpdate();
+
+        transaction.commit();
+        session.close();
+        return true;
     }
 
     @Override
-    public boolean update(Customer entity) throws SQLException, ClassNotFoundException {
-        return SQLUtil.execute("UPDATE Customer SET name=?, address=? WHERE id=?", entity.getName(), entity.getAddress(), entity.getId());
+    public boolean update(Customer entity)  throws Exception  {
+        Session session = FactoryConfiguration.getInstance().getSession();
+        Transaction transaction = session.beginTransaction();
+        session.update(entity);
+        transaction.commit();
+        session.close();
+        return true;
     }
 
     @Override
-    public boolean exist(String id) throws SQLException, ClassNotFoundException {
-        ResultSet rst = SQLUtil.execute("SELECT id FROM Customer WHERE id=?", id);
-        return rst.next();
+    public boolean add(Customer entity)  throws Exception  {
+        Session session = FactoryConfiguration.getInstance().getSession();
+        Transaction transaction = session.beginTransaction();
+        session.save(entity);
+        transaction.commit();
+        session.close();
+        return true;
     }
-
-    @Override
-    public String generateNewID() throws SQLException, ClassNotFoundException {
-        ResultSet rst = SQLUtil.execute("SELECT id FROM Customer ORDER BY id DESC LIMIT 1;");
-        if (rst.next()) {
-            String id = rst.getString("id");
-            int newCustomerId = Integer.parseInt(id.replace("C00-", "")) + 1;
-            return String.format("C00-%03d", newCustomerId);
-        } else {
-            return "C00-001";
-        }
-    }
-
-
-    @Override
-    public boolean delete(String id) throws SQLException, ClassNotFoundException {
-        return SQLUtil.execute("DELETE FROM Customer WHERE id=?", id);
-    }
-
-
-    @Override
-    public Customer search(String id) throws SQLException, ClassNotFoundException {
-        ResultSet rst = SQLUtil.execute("SELECT * FROM Customer WHERE id=?", id + "");
-        rst.next();
-        return new Customer(id + "", rst.getString("name"), rst.getString("address"));
-    }
-
 }

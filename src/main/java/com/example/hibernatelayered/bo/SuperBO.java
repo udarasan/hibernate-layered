@@ -1,4 +1,4 @@
-package lk.ijse.pos.bo;
+package com.example.hibernatelayered.bo;
 
 public interface SuperBO {
 }

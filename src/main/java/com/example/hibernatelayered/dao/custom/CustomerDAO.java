@@ -1,7 +1,8 @@
-package lk.ijse.pos.dao.custom;
+package com.example.hibernatelayered.dao.custom;
 
-import lk.ijse.pos.dao.CrudDAO;
-import lk.ijse.pos.entity.Customer;
+
+import com.example.hibernatelayered.dao.CrudDAO;
+import com.example.hibernatelayered.entity.Customer;
 
 public interface CustomerDAO extends CrudDAO<Customer> {
 }

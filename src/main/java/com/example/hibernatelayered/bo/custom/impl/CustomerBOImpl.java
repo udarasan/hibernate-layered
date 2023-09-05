@@ -1,21 +1,22 @@
-package lk.ijse.pos.bo.custom.impl;
+package com.example.hibernatelayered.bo.custom.impl;
 
-import lk.ijse.pos.bo.custom.CustomerBO;
-import lk.ijse.pos.dao.DAOFactory;
-import lk.ijse.pos.dao.custom.CustomerDAO;
-import lk.ijse.pos.entity.Customer;
-import lk.ijse.pos.dto.CustomerDTO;
+import com.example.hibernatelayered.bo.custom.CustomerBO;
+import com.example.hibernatelayered.dao.DAOFactory;
+import com.example.hibernatelayered.dao.custom.CustomerDAO;
+import com.example.hibernatelayered.dto.CustomerDTO;
+import com.example.hibernatelayered.entity.Customer;
 
 import java.sql.SQLException;
 import java.util.ArrayList;
+import java.util.List;
 
 public class CustomerBOImpl implements CustomerBO {
 
     CustomerDAO customerDAO = (CustomerDAO) DAOFactory.getDaoFactory().getDAO(DAOFactory.DAOTypes.CUSTOMER);
     @Override
-    public ArrayList<CustomerDTO> getAllCustomers() throws SQLException, ClassNotFoundException {
-        ArrayList<CustomerDTO> allCustomers= new ArrayList<>();
-        ArrayList<Customer> all = customerDAO.getAll();
+    public List<CustomerDTO> getAllCustomers() throws Exception {
+        List<CustomerDTO> allCustomers= new ArrayList<>();
+        List<Customer> all = customerDAO.getAll();
         for (Customer c : all) {
             allCustomers.add(new CustomerDTO(c.getId(),c.getName(),c.getAddress()));
         }
@@ -23,27 +24,19 @@ public class CustomerBOImpl implements CustomerBO {
     }
 
     @Override
-    public boolean addCustomer(CustomerDTO dto) throws SQLException, ClassNotFoundException {
+    public boolean addCustomer(CustomerDTO dto) throws Exception {
         return customerDAO.add(new Customer(dto.getId(), dto.getName(), dto.getAddress()));
     }
 
     @Override
-    public boolean updateCustomer(CustomerDTO dto) throws SQLException, ClassNotFoundException {
+    public boolean updateCustomer(CustomerDTO dto) throws Exception {
         return customerDAO.update(new Customer(dto.getId(),dto.getName(),dto.getAddress()));
     }
 
-    @Override
-    public boolean existCustomer(String id) throws SQLException, ClassNotFoundException {
-        return customerDAO.exist(id);
-    }
 
     @Override
-    public boolean deleteCustomer(String id) throws SQLException, ClassNotFoundException {
+    public boolean deleteCustomer(String id) throws Exception {
         return customerDAO.delete(id);
     }
 
-    @Override
-    public String generateNewCustomerID() throws SQLException, ClassNotFoundException {
-        return customerDAO.generateNewID();
-    }
 }

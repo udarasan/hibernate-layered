@@ -1,22 +1,19 @@
-package lk.ijse.pos.bo.custom;
+package com.example.hibernatelayered.bo.custom;
 
-import lk.ijse.pos.bo.SuperBO;
-import lk.ijse.pos.dto.CustomerDTO;
+import com.example.hibernatelayered.bo.SuperBO;
+import com.example.hibernatelayered.dto.CustomerDTO;
 
 import java.sql.SQLException;
 import java.util.ArrayList;
+import java.util.List;
 
 public interface CustomerBO extends SuperBO {
 
-    public ArrayList<CustomerDTO> getAllCustomers() throws SQLException, ClassNotFoundException;
+    public List<CustomerDTO> getAllCustomers()  throws Exception ;
+    public boolean addCustomer(CustomerDTO dto) throws Exception ;
 
-    public boolean addCustomer(CustomerDTO dto) throws SQLException, ClassNotFoundException ;
+    public boolean updateCustomer(CustomerDTO dto)  throws Exception  ;
 
-    public boolean updateCustomer(CustomerDTO dto) throws SQLException, ClassNotFoundException ;
+    public boolean deleteCustomer(String id) throws Exception ;
 
-    public boolean existCustomer(String id) throws SQLException, ClassNotFoundException;
-
-    public boolean deleteCustomer(String id) throws SQLException, ClassNotFoundException;
-
-    public String generateNewCustomerID() throws SQLException, ClassNotFoundException;
 }
